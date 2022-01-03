@@ -84,7 +84,7 @@ namespace FileManager
             currentDirectories = Directory.GetDirectories(filePath);
             currentFiles = Directory.GetFiles(filePath);
 
-            flowLayoutPanel1.Controls.Clear();
+            panel_filesList.Controls.Clear();
             label_currentLocation.Text = currentLocation;
             
             displayFilesList(new List<string>(currentDirectories));
@@ -105,69 +105,54 @@ namespace FileManager
                     var fileName = filesDirectoriesList[i].Substring(startOfName + 1, filesDirectoriesList[i].Length - (startOfName + 1));
 
                     // Icon infront of each item
-                    Button newBtn = createButton("", 100, 100, new Padding(0, 0, 0, 0), FlatStyle.Flat, ContentAlignment.MiddleCenter, 0, filesDirectoriesList[i], false);
+                    Button newBtn = createButton(text: "", width: 100, name: filesDirectoriesList[i]);
                     FileAttributes attr = File.GetAttributes(filesDirectoriesList[i]);
                     if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                         newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\folder-icon.png");
                     else
                         newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\pdf-icon.png"); //ToDo different extensions
                     
-                    flowLayoutPanel1.Controls.Add(newBtn);
+                    panel_filesList.Controls.Add(newBtn);
 
                     // File/Folder Name
-                    newBtn = createButton(fileName, 100, 800, new Padding(0, 0, 0, 0), FlatStyle.Flat, ContentAlignment.MiddleLeft, 0, filesDirectoriesList[i], true);
+                    newBtn = createButton(text: fileName, width: 800, name: filesDirectoriesList[i], isHoverEnabled: true);
                     newBtn.Click += button_Click_Open;
-                    flowLayoutPanel1.Controls.Add(newBtn);
+                    panel_filesList.Controls.Add(newBtn);
 
                     // Size
-                    newBtn = createButton("200kb", 100, 200, new Padding(0, 0, 0, 0), FlatStyle.Flat, ContentAlignment.MiddleCenter, 0, filesDirectoriesList[i], false);
-                    flowLayoutPanel1.Controls.Add(newBtn);
+                    newBtn = createButton(text: "200kb", width: 200, name: filesDirectoriesList[i]);
+                    panel_filesList.Controls.Add(newBtn);
                     
                     // Date Modified
-                    newBtn = createButton("23/23/23", 100, 200, new Padding(0, 0, 0, 0), FlatStyle.Flat, ContentAlignment.MiddleCenter, 0, filesDirectoriesList[i], false);
-                    flowLayoutPanel1.Controls.Add(newBtn);
-                    
+                    newBtn = createButton(text: "23/23/23", width: 200, name: filesDirectoriesList[i]);
+                    panel_filesList.Controls.Add(newBtn);
+
                     // #List of tags
-                    string btnText = "No Tags";
-                    if (filesDictionary.ContainsKey(filesDirectoriesList[i]))
-                    {
-                        if (filesDictionary[filesDirectoriesList[i]].Count != 0)
-                        {
-                            btnText = $" ● ";
-                            foreach (var tag in filesDictionary[filesDirectoriesList[i]])
-                            {
-                                btnText += $" #{tag} ● ";
-                            }
-                        }
-                    }
-                    newBtn = createButton(btnText, 100, 800, new Padding(0, 0, 0, 0), FlatStyle.Flat, ContentAlignment.MiddleLeft, 0, filesDirectoriesList[i], true);
+                    string btnText = listTagsForFile(filesDirectoriesList[i]);
+                    newBtn = createButton(text: btnText, width: 800, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft, isHoverEnabled: true);
                     newBtn.Click += button_Click_Manage_Tag;
                     newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\add-icon.png"); // Change to plus
                     newBtn.ImageAlign = ContentAlignment.MiddleRight;
-                    flowLayoutPanel1.Controls.Add(newBtn);
+                    panel_filesList.Controls.Add(newBtn);
                 }
             }
         }
 
-        private Button createButton(string text, int height, int width, Padding margin, FlatStyle flatStyle, ContentAlignment textAlign, int borderSize, string name, bool isHoverEnabled)
+        private string listTagsForFile(string key, string btnText = "No Tags")
         {
-            Button button = new Button();
-            button.Text = text;
-            button.Height = height;
-            button.Width = width;
-            button.Margin = margin;
-            button.FlatStyle = flatStyle;
-            button.TextAlign = textAlign;
-            button.FlatAppearance.BorderSize = borderSize;
-            button.Name = name;
-            if (!isHoverEnabled)
+            // #List of tags
+            if (filesDictionary.ContainsKey(key))
             {
-                button.FlatAppearance.MouseOverBackColor = button.BackColor;
-                button.BackColorChanged += (s, e) => {
-                    button.FlatAppearance.MouseOverBackColor = button.BackColor;
-                };
+                btnText = $" ● ";
+                foreach (var tag in filesDictionary[key])
+                {
+                    if (btnText.Length <= 40)
+                        btnText += $" #{tag} ● ";
+                    else if (btnText.Length > 40 && btnText.LastIndexOf(@"...") < 0)
+                        btnText += "...";
+                }
             }
-            return button;
+            return btnText;
         }
 
         private void button_Click_Manage_Tag(object sender, EventArgs e)
@@ -199,26 +184,39 @@ namespace FileManager
                 }
 
                 // #Tag changes on the UI
-                if (filesDictionary[filePath].Count != 0)
+                button.Text = listTagsForFile(filePath, button.Text);
+
+                // Reload tags list in side panel
+                panel_tagsList.Controls.Clear();
+                foreach (var tag in tagsDictionary)
                 {
-                    button.Text = "●";
-                    foreach (var tag in filesDictionary[filePath])
-                    {
-                        button.Text += $" #{tag} ● ";
-                    }
+                    Button newBtn = createButton(text: $"#{tag.Key}", width: 300, padding: new Padding(0, 0, 0, 0), textAlign: ContentAlignment.MiddleLeft, name: tag.Key, isHoverEnabled: true);
+                    newBtn.Click += button_searchTags_Click;
+                    panel_tagsList.Controls.Add(newBtn);
                 }
             }
         }
 
         private void button_searchTags_Click(object sender, EventArgs e)
         {
+            Button button = (Button)sender;
             isSearching = true;
             
-            if (tagsDictionary.ContainsKey(textbox_search.Text))
+            if (button.Name.Equals("button_searchTags"))
+                searchTags(textbox_search.Text);
+            else
+                searchTags(button.Text);
+        }
+
+        private void searchTags(string searchString)
+        {
+            if (searchString.IndexOf("#") == 0)
+                searchString = searchString.Substring(1, searchString.Length - 1);
+
+            if (tagsDictionary.ContainsKey(searchString))
             {
-                // Display only files with searched tag
-                flowLayoutPanel1.Controls.Clear();
-                displayFilesList(tagsDictionary[textbox_search.Text]);
+                panel_filesList.Controls.Clear();
+                displayFilesList(tagsDictionary[searchString]);
             }
             else
             {
@@ -265,6 +263,43 @@ namespace FileManager
         private void button_videos_Click(object sender, EventArgs e)
         {
             openDirectory(SpecialFolders[Folder.MyVideos]);
+        }
+
+        private Button createButton(
+            string text = "",
+            string name = "",
+            int? height = 100,
+            int? width = 300,
+            Padding? margin = null,
+            Padding? padding = null,
+            FlatStyle? flatStyle = FlatStyle.Flat,
+            ContentAlignment? textAlign = ContentAlignment.MiddleCenter,
+            int? borderSize = 0,
+            bool? isHoverEnabled = false)
+        {
+            if (margin == null)
+                margin = new Padding(0, 0, 0, 0);
+            if (padding == null)
+                padding = new Padding(0, 0, 0, 0);
+
+            Button button = new Button();
+            button.Text = text;
+            button.Name = name;
+            button.Height = (int)height;
+            button.Width = (int)width;
+            button.Margin = (Padding)margin;
+            button.Padding = (Padding)padding;
+            button.FlatStyle = (FlatStyle)flatStyle;
+            button.TextAlign = (ContentAlignment)textAlign;
+            button.FlatAppearance.BorderSize = (int)borderSize;
+            if ((bool)!isHoverEnabled)
+            {
+                button.FlatAppearance.MouseOverBackColor = button.BackColor;
+                button.BackColorChanged += (s, e) => {
+                    button.FlatAppearance.MouseOverBackColor = button.BackColor;
+                };
+            }
+            return button;
         }
 
         public static DialogResult InputBox(string title, string promptText, ref string value)
