@@ -37,7 +37,7 @@ namespace FileManager
         
         Dictionary<string, List<string>> tagsDictionary = new Dictionary<string, List<string>>();
         Dictionary<string, List<string>> filesDictionary = new Dictionary<string, List<string>>();
-
+        
         public FileManager()
         {
             // Initialize form
@@ -50,12 +50,46 @@ namespace FileManager
             currentFiles = Directory.GetFiles(SpecialFolders[Folder.Desktop]);
             label_currentLocation.Text = currentLocation;
 
+            // Additional Styling to controls
+            Color primary = Color.FromArgb(32, 32, 32);
+            Color secondary = Color.FromArgb(25, 25, 25);
+            Color text = Color.FromArgb(150, 150, 150);
+
+            this.BackColor = primary;
+            panel_tagsList.BackColor = secondary;
+            textbox_search_container.BackColor = primary;
+            textbox_search.BackColor = primary;
+            //textbox_search.ForeColor = Color.FromArgb(109, 107, 107); // ToDo add grey search tags
+            textbox_search.ForeColor = text;
+            textbox_search_wrapper.BackColor = secondary;
+            backButton.BackColor = secondary;
+            backButton.ForeColor = text;
+            button_desktop.BackColor = primary;
+            button_desktop.ForeColor = text;
+            button_music.BackColor = primary;
+            button_music.ForeColor = text;
+            button_videos.BackColor = primary;
+            button_videos.ForeColor = text;
+            button_myDocuments.BackColor = primary;
+            button_myDocuments.ForeColor = text;
+            button_pictures.BackColor = primary;
+            button_pictures.ForeColor = text;
+            current_location_container.BackColor = secondary;
+
             // Load the files in the default directory on the screen
             if (!isLoaded)
             {
                 openDirectory(currentLocation);
             }
             isLoaded = true;
+        }
+
+        private void SearchText(object sender, MouseEventArgs e)
+        {
+            //if (textbox_search.Text == "Search Tags...")
+            //    textbox_search.Text = "";
+            //else if (string.IsNullOrWhiteSpace(textbox_search.Text))
+            //    textbox_search.Text = "Search Tags...";
         }
 
         private void button_Click_Open(object sender, EventArgs e)
@@ -115,7 +149,7 @@ namespace FileManager
                     panel_filesList.Controls.Add(newBtn);
 
                     // File/Folder Name
-                    newBtn = createButton(text: fileName, width: 800, name: filesDirectoriesList[i], isHoverEnabled: true);
+                    newBtn = createButton(text: fileName, width: 700, name: filesDirectoriesList[i], isHoverEnabled: true);
                     newBtn.Click += button_Click_Open;
                     panel_filesList.Controls.Add(newBtn);
 
@@ -129,7 +163,7 @@ namespace FileManager
 
                     // #List of tags
                     string btnText = listTagsForFile(filesDirectoriesList[i]);
-                    newBtn = createButton(text: btnText, width: 800, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft, isHoverEnabled: true);
+                    newBtn = createButton(text: btnText, width: 700, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft, isHoverEnabled: true);
                     newBtn.Click += button_Click_Manage_Tag;
                     newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\add-icon.png"); // Change to plus
                     newBtn.ImageAlign = ContentAlignment.MiddleRight;
@@ -143,13 +177,15 @@ namespace FileManager
             // #List of tags
             if (filesDictionary.ContainsKey(key))
             {
-                btnText = $" ● ";
+                btnText = $"";
                 foreach (var tag in filesDictionary[key])
                 {
-                    if (btnText.Length <= 40)
-                        btnText += $" #{tag} ● ";
+                    if (btnText.Length <= 40 && btnText.Equals(""))
+                        btnText += $" #{tag}";
+                    else if (btnText.Length <= 40)
+                        btnText += $" ● #{tag}";
                     else if (btnText.Length > 40 && btnText.LastIndexOf(@"...") < 0)
-                        btnText += "...";
+                        btnText += " ...";
                 }
             }
             return btnText;
@@ -188,9 +224,34 @@ namespace FileManager
 
                 // Reload tags list in side panel
                 panel_tagsList.Controls.Clear();
+                int width = 500;
+                if (tagsDictionary.Count > 9)
+                    width = 450;
+
                 foreach (var tag in tagsDictionary)
                 {
-                    Button newBtn = createButton(text: $"#{tag.Key}", width: 300, padding: new Padding(0, 0, 0, 0), textAlign: ContentAlignment.MiddleLeft, name: tag.Key, isHoverEnabled: true);
+                    Button newBtn = createButton(text: $"#{tag.Key}", width: width, padding: new Padding(100, 20, 100, 20), textAlign: ContentAlignment.MiddleLeft, name: tag.Key, isHoverEnabled: true);
+                    newBtn.Click += button_searchTags_Click;
+                    panel_tagsList.Controls.Add(newBtn);
+                }
+            }
+        }
+
+        private void button_filterTagsSidebar_Search(object sender, KeyEventArgs e)
+        {
+            TextBox textbox = (TextBox)sender;
+
+            panel_tagsList.Controls.Clear();
+            foreach (KeyValuePair<string, List<string>> tag in tagsDictionary)
+            {
+                int width = 500;
+                if (tagsDictionary.Count > 9)
+                    width = 450;
+
+                // Reload tags list in side panel
+                if (tag.Key.Contains(textbox_search.Text))
+                {
+                    Button newBtn = createButton(text: $"#{tag.Key}", width: width, padding: new Padding(100, 20, 100, 20), textAlign: ContentAlignment.MiddleLeft, name: tag.Key, isHoverEnabled: true);
                     newBtn.Click += button_searchTags_Click;
                     panel_tagsList.Controls.Add(newBtn);
                 }
@@ -201,15 +262,8 @@ namespace FileManager
         {
             Button button = (Button)sender;
             isSearching = true;
-            
-            if (button.Name.Equals("button_searchTags"))
-                searchTags(textbox_search.Text);
-            else
-                searchTags(button.Text);
-        }
+            string searchString = button.Text;
 
-        private void searchTags(string searchString)
-        {
             if (searchString.IndexOf("#") == 0)
                 searchString = searchString.Substring(1, searchString.Length - 1);
 
@@ -283,6 +337,7 @@ namespace FileManager
                 padding = new Padding(0, 0, 0, 0);
 
             Button button = new Button();
+            button.ForeColor = Color.FromArgb(250, 250, 250);
             button.Text = text;
             button.Name = name;
             button.Height = (int)height;
@@ -343,5 +398,7 @@ namespace FileManager
             value = textBox.Text;
             return dialogResult;
         }
+
+       
     }
 }
