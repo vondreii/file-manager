@@ -57,12 +57,11 @@ namespace FileManager
 
             this.BackColor = primary;
             panel_tagsList.BackColor = secondary;
-            textbox_search_container.BackColor = primary;
-            textbox_search.BackColor = primary;
+            textbox_search.BackColor = secondary;
             //textbox_search.ForeColor = Color.FromArgb(109, 107, 107); // ToDo add grey search tags
             textbox_search.ForeColor = text;
-            textbox_search_wrapper.BackColor = secondary;
-            backButton.BackColor = secondary;
+            button2.BackColor = secondary;
+            backButton.BackColor = primary;
             backButton.ForeColor = text;
             button_desktop.BackColor = primary;
             button_desktop.ForeColor = text;
@@ -75,6 +74,7 @@ namespace FileManager
             button_pictures.BackColor = primary;
             button_pictures.ForeColor = text;
             current_location_container.BackColor = secondary;
+            panel2.BackColor = primary;
 
             // Load the files in the default directory on the screen
             if (!isLoaded)
@@ -130,6 +130,8 @@ namespace FileManager
             // Show all the unhidden files in the directory
             for (int i = 0; i < filesDirectoriesList.Count; i++)
             {
+                var fileInfo = new System.IO.FileInfo(filesDirectoriesList[i]);
+                System.IO.DriveInfo driveInfo = new System.IO.DriveInfo(filesDirectoriesList[i]);
                 bool isHidden = ((File.GetAttributes(filesDirectoriesList[i]) & FileAttributes.Hidden) == FileAttributes.Hidden);
 
                 if (!isHidden)
@@ -149,21 +151,26 @@ namespace FileManager
                     panel_filesList.Controls.Add(newBtn);
 
                     // File/Folder Name
-                    newBtn = createButton(text: fileName, width: 700, name: filesDirectoriesList[i], isHoverEnabled: true);
+                    newBtn = createButton(text: fileName, width: 600, name: filesDirectoriesList[i], padding: new Padding(24,0,0,0), isHoverEnabled: true);
                     newBtn.Click += button_Click_Open;
-                    panel_filesList.Controls.Add(newBtn);
-
-                    // Size
-                    newBtn = createButton(text: "200kb", width: 200, name: filesDirectoriesList[i]);
                     panel_filesList.Controls.Add(newBtn);
                     
                     // Date Modified
-                    newBtn = createButton(text: "23/23/23", width: 200, name: filesDirectoriesList[i]);
+                    newBtn = createButton(text: fileInfo.LastWriteTime.ToString(), width: 400, name: filesDirectoriesList[i]);
                     panel_filesList.Controls.Add(newBtn);
 
+                    // Size
+                    try {
+                        newBtn = createButton(text: fileInfo.Length.ToString(), width: 200, name: filesDirectoriesList[i]);
+                    }
+                    catch { 
+                        newBtn = createButton(text: "", width: 200, name: filesDirectoriesList[i]);
+                    }
+                    panel_filesList.Controls.Add(newBtn);
+                    
                     // #List of tags
                     string btnText = listTagsForFile(filesDirectoriesList[i]);
-                    newBtn = createButton(text: btnText, width: 700, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft, isHoverEnabled: true);
+                    newBtn = createButton(text: btnText, width: 600, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft, isHoverEnabled: true);
                     newBtn.Click += button_Click_Manage_Tag;
                     newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\add-icon.png"); // Change to plus
                     newBtn.ImageAlign = ContentAlignment.MiddleRight;
@@ -180,11 +187,11 @@ namespace FileManager
                 btnText = $"";
                 foreach (var tag in filesDictionary[key])
                 {
-                    if (btnText.Length <= 40 && btnText.Equals(""))
+                    if (btnText.Length <= 25 && btnText.Equals(""))
                         btnText += $" #{tag}";
-                    else if (btnText.Length <= 40)
+                    else if (btnText.Length <= 25)
                         btnText += $" ● #{tag}";
-                    else if (btnText.Length > 40 && btnText.LastIndexOf(@"...") < 0)
+                    else if (btnText.Length > 25 && btnText.LastIndexOf(@"...") < 0)
                         btnText += " ...";
                 }
             }
@@ -322,12 +329,12 @@ namespace FileManager
         private Button createButton(
             string text = "",
             string name = "",
-            int? height = 100,
+            int? height = 90,
             int? width = 300,
             Padding? margin = null,
             Padding? padding = null,
             FlatStyle? flatStyle = FlatStyle.Flat,
-            ContentAlignment? textAlign = ContentAlignment.MiddleCenter,
+            ContentAlignment? textAlign = ContentAlignment.MiddleLeft,
             int? borderSize = 0,
             bool? isHoverEnabled = false)
         {
