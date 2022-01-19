@@ -37,6 +37,12 @@
             this.button_videos = new System.Windows.Forms.Button();
             this.button_pictures = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.panel_tagsList = new System.Windows.Forms.FlowLayoutPanel();
             this.current_location_container = new System.Windows.Forms.Button();
             this.current_location = new System.Windows.Forms.Button();
@@ -52,12 +58,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.panel9 = new System.Windows.Forms.Panel();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -177,6 +177,63 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(2529, 233);
             this.panel2.TabIndex = 11;
+            // 
+            // panel9
+            // 
+            this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.panel9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel9.BackgroundImage")));
+            this.panel9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panel9.Location = new System.Drawing.Point(688, 90);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(65, 62);
+            this.panel9.TabIndex = 5;
+            // 
+            // panel8
+            // 
+            this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.panel8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel8.BackgroundImage")));
+            this.panel8.Location = new System.Drawing.Point(885, 90);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(65, 62);
+            this.panel8.TabIndex = 4;
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.panel7.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel7.BackgroundImage")));
+            this.panel7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panel7.Location = new System.Drawing.Point(506, 90);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(62, 62);
+            this.panel7.TabIndex = 3;
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.panel6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel6.BackgroundImage")));
+            this.panel6.Location = new System.Drawing.Point(311, 90);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(65, 62);
+            this.panel6.TabIndex = 2;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.panel5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel5.BackgroundImage")));
+            this.panel5.Location = new System.Drawing.Point(84, 90);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(64, 62);
+            this.panel5.TabIndex = 1;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.Gray;
+            this.label4.Location = new System.Drawing.Point(48, 27);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(162, 32);
+            this.label4.TabIndex = 25;
+            this.label4.Text = "Quick Links";
             // 
             // panel_tagsList
             // 
@@ -337,63 +394,6 @@
             this.label3.Size = new System.Drawing.Size(191, 32);
             this.label3.TabIndex = 24;
             this.label3.Text = "Date Modified";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.Gray;
-            this.label4.Location = new System.Drawing.Point(48, 27);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(162, 32);
-            this.label4.TabIndex = 25;
-            this.label4.Text = "Quick Links";
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.panel5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel5.BackgroundImage")));
-            this.panel5.Location = new System.Drawing.Point(84, 90);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(64, 62);
-            this.panel5.TabIndex = 1;
-            // 
-            // panel6
-            // 
-            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.panel6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel6.BackgroundImage")));
-            this.panel6.Location = new System.Drawing.Point(311, 90);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(65, 62);
-            this.panel6.TabIndex = 2;
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.panel7.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel7.BackgroundImage")));
-            this.panel7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel7.Location = new System.Drawing.Point(506, 90);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(62, 62);
-            this.panel7.TabIndex = 3;
-            // 
-            // panel8
-            // 
-            this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.panel8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel8.BackgroundImage")));
-            this.panel8.Location = new System.Drawing.Point(885, 90);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(65, 62);
-            this.panel8.TabIndex = 4;
-            // 
-            // panel9
-            // 
-            this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.panel9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel9.BackgroundImage")));
-            this.panel9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel9.Location = new System.Drawing.Point(688, 90);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(65, 62);
-            this.panel9.TabIndex = 5;
             // 
             // FileManager
             // 

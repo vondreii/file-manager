@@ -34,7 +34,7 @@ namespace FileManager
             {Folder.MyVideos, Environment.GetFolderPath(Environment.SpecialFolder.MyVideos)},
             {Folder.Desktop, Environment.GetFolderPath(Environment.SpecialFolder.Desktop)},
         };
-        
+
         Dictionary<string, List<string>> tagsDictionary = new Dictionary<string, List<string>>();
         Dictionary<string, List<string>> filesDictionary = new Dictionary<string, List<string>>();
         
@@ -54,7 +54,7 @@ namespace FileManager
             Color primary = Color.FromArgb(32, 32, 32);
             Color secondary = Color.FromArgb(25, 25, 25);
             Color text = Color.FromArgb(150, 150, 150);
-
+            
             this.BackColor = primary;
             panel_tagsList.BackColor = secondary;
             textbox_search.BackColor = secondary;
@@ -140,7 +140,7 @@ namespace FileManager
                     var startOfName = filesDirectoriesList[i].LastIndexOf("\\");
                     var fileName = filesDirectoriesList[i].Substring(startOfName + 1, filesDirectoriesList[i].Length - (startOfName + 1));
 
-                    // Icon infront of each item
+                    //// Icon infront of each item
                     Button newBtn = createButton(text: "", width: 100, name: filesDirectoriesList[i]);
                     FileAttributes attr = File.GetAttributes(filesDirectoriesList[i]);
                     if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
@@ -150,11 +150,19 @@ namespace FileManager
                     
                     panel_filesList.Controls.Add(newBtn);
 
+                    // Space
+                    newBtn = createButton(text: "", width: 25, name: filesDirectoriesList[i]);
+                    panel_filesList.Controls.Add(newBtn);
+
                     // File/Folder Name
-                    newBtn = createButton(text: fileName, width: 600, name: filesDirectoriesList[i], padding: new Padding(24,0,0,0), isHoverEnabled: true);
+                    newBtn = createButton(text: fileName, width: 550, name: filesDirectoriesList[i], padding: new Padding(24,0,0,0), isHoverEnabled: true);
                     newBtn.Click += button_Click_Open;
                     panel_filesList.Controls.Add(newBtn);
-                    
+
+                    // Space
+                    newBtn = createButton(text: "", width: 25, name: filesDirectoriesList[i]);
+                    panel_filesList.Controls.Add(newBtn);
+
                     // Date Modified
                     newBtn = createButton(text: fileInfo.LastWriteTime.ToString(), width: 400, name: filesDirectoriesList[i]);
                     panel_filesList.Controls.Add(newBtn);
@@ -167,16 +175,30 @@ namespace FileManager
                         newBtn = createButton(text: "", width: 200, name: filesDirectoriesList[i]);
                     }
                     panel_filesList.Controls.Add(newBtn);
-                    
+
                     // #List of tags
                     string btnText = listTagsForFile(filesDirectoriesList[i]);
-                    newBtn = createButton(text: btnText, width: 600, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft, isHoverEnabled: true);
+                    newBtn = createButton(text: btnText, width: 600, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft);
                     newBtn.Click += button_Click_Manage_Tag;
-                    newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\add-icon.png"); // Change to plus
+                    newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\edit-blue.png"); // Change to plus
                     newBtn.ImageAlign = ContentAlignment.MiddleRight;
+                    newBtn.MouseEnter += new System.EventHandler(this.button_MouseHover);
+                    newBtn.MouseLeave += new System.EventHandler(this.button_MouseLeave);
                     panel_filesList.Controls.Add(newBtn);
                 }
             }
+        }
+
+        private void button_MouseHover(object sender, System.EventArgs e)
+        {
+            Button button = (Button)sender;
+            button.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\edit-green.png");
+        }
+
+        private void button_MouseLeave(object sender, System.EventArgs e)
+        {
+            Button button = (Button)sender;
+            button.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\edit-blue.png");
         }
 
         private string listTagsForFile(string key, string btnText = "No Tags")
