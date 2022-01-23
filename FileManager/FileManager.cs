@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -84,14 +85,6 @@ namespace FileManager
             isLoaded = true;
         }
 
-        private void SearchText(object sender, MouseEventArgs e)
-        {
-            //if (textbox_search.Text == "Search Tags...")
-            //    textbox_search.Text = "";
-            //else if (string.IsNullOrWhiteSpace(textbox_search.Text))
-            //    textbox_search.Text = "Search Tags...";
-        }
-
         private void button_Click_Open(object sender, EventArgs e)
         {
             Button button = (Button)sender;
@@ -113,6 +106,8 @@ namespace FileManager
 
         private void openDirectory(string filePath)
         {
+            resetPlaceholders();
+
             // Change current location, and files to be shown in UI
             currentLocation = filePath;
             currentDirectories = Directory.GetDirectories(filePath);
@@ -121,11 +116,11 @@ namespace FileManager
             panel_filesList.Controls.Clear();
             label_currentLocation.Text = currentLocation;
             
-            displayFilesList(new List<string>(currentDirectories));
-            displayFilesList(new List<string>(currentFiles));
+            displayFilesList(new List<string>(currentDirectories), "");
+            displayFilesList(new List<string>(currentFiles), "");
         }
 
-        private void displayFilesList(List<string> filesDirectoriesList)
+        private void displayFilesList(List<string> filesDirectoriesList, string searchString)
         {
             // Show all the unhidden files in the directory
             for (int i = 0; i < filesDirectoriesList.Count; i++)
@@ -140,51 +135,56 @@ namespace FileManager
                     var startOfName = filesDirectoriesList[i].LastIndexOf("\\");
                     var fileName = filesDirectoriesList[i].Substring(startOfName + 1, filesDirectoriesList[i].Length - (startOfName + 1));
 
-                    //// Icon infront of each item
-                    Button newBtn = createButton(text: "", width: 100, name: filesDirectoriesList[i]);
-                    FileAttributes attr = File.GetAttributes(filesDirectoriesList[i]);
-                    if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                        newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\folder-icon.png");
-                    else
-                        newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\pdf-icon.png"); //ToDo different extensions
-                    
-                    panel_filesList.Controls.Add(newBtn);
+                    if (searchString.Equals("") || fileName.ToLower().IndexOf(searchString.ToLower()) >= 0)
+                    {
+                        // Icon infront of each item
+                        Button newBtn = createButton(text: "", width: 100, name: filesDirectoriesList[i]);
+                        FileAttributes attr = File.GetAttributes(filesDirectoriesList[i]);
+                        if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                            newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\folder-icon.png");
+                        else
+                            newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\pdf-icon.png"); //ToDo different extensions
 
-                    // Space
-                    newBtn = createButton(text: "", width: 25, name: filesDirectoriesList[i]);
-                    panel_filesList.Controls.Add(newBtn);
+                        panel_filesList.Controls.Add(newBtn);
 
-                    // File/Folder Name
-                    newBtn = createButton(text: fileName, width: 550, name: filesDirectoriesList[i], padding: new Padding(24,0,0,0), isHoverEnabled: true);
-                    newBtn.Click += button_Click_Open;
-                    panel_filesList.Controls.Add(newBtn);
+                        // Space
+                        newBtn = createButton(text: "", width: 25, name: filesDirectoriesList[i]);
+                        panel_filesList.Controls.Add(newBtn);
 
-                    // Space
-                    newBtn = createButton(text: "", width: 25, name: filesDirectoriesList[i]);
-                    panel_filesList.Controls.Add(newBtn);
+                        // File/Folder Name
+                        newBtn = createButton(text: fileName, width: 550, name: filesDirectoriesList[i], padding: new Padding(24, 0, 0, 0), isHoverEnabled: true);
+                        newBtn.Click += button_Click_Open;
+                        panel_filesList.Controls.Add(newBtn);
 
-                    // Date Modified
-                    newBtn = createButton(text: fileInfo.LastWriteTime.ToString(), width: 400, name: filesDirectoriesList[i]);
-                    panel_filesList.Controls.Add(newBtn);
+                        // Space
+                        newBtn = createButton(text: "", width: 25, name: filesDirectoriesList[i]);
+                        panel_filesList.Controls.Add(newBtn);
 
-                    // Size
-                    try {
-                        newBtn = createButton(text: fileInfo.Length.ToString(), width: 200, name: filesDirectoriesList[i]);
+                        // Date Modified
+                        newBtn = createButton(text: fileInfo.LastWriteTime.ToString(), width: 400, name: filesDirectoriesList[i]);
+                        panel_filesList.Controls.Add(newBtn);
+
+                        // Size
+                        try
+                        {
+                            newBtn = createButton(text: fileInfo.Length.ToString(), width: 200, name: filesDirectoriesList[i]);
+                        }
+                        catch
+                        {
+                            newBtn = createButton(text: "", width: 200, name: filesDirectoriesList[i]);
+                        }
+                        panel_filesList.Controls.Add(newBtn);
+
+                        // #List of tags
+                        string btnText = listTagsForFile(filesDirectoriesList[i]);
+                        newBtn = createButton(text: btnText, width: 600, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft);
+                        newBtn.Click += button_Click_Manage_Tag;
+                        newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\edit-blue.png"); // Change to plus
+                        newBtn.ImageAlign = ContentAlignment.MiddleRight;
+                        newBtn.MouseEnter += new System.EventHandler(this.button_MouseHover);
+                        newBtn.MouseLeave += new System.EventHandler(this.button_MouseLeave);
+                        panel_filesList.Controls.Add(newBtn);
                     }
-                    catch { 
-                        newBtn = createButton(text: "", width: 200, name: filesDirectoriesList[i]);
-                    }
-                    panel_filesList.Controls.Add(newBtn);
-
-                    // #List of tags
-                    string btnText = listTagsForFile(filesDirectoriesList[i]);
-                    newBtn = createButton(text: btnText, width: 600, name: filesDirectoriesList[i], textAlign: ContentAlignment.MiddleLeft);
-                    newBtn.Click += button_Click_Manage_Tag;
-                    newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\edit-blue.png"); // Change to plus
-                    newBtn.ImageAlign = ContentAlignment.MiddleRight;
-                    newBtn.MouseEnter += new System.EventHandler(this.button_MouseHover);
-                    newBtn.MouseLeave += new System.EventHandler(this.button_MouseLeave);
-                    panel_filesList.Controls.Add(newBtn);
                 }
             }
         }
@@ -222,13 +222,23 @@ namespace FileManager
 
         private void button_Click_Manage_Tag(object sender, EventArgs e)
         {
+            resetPlaceholders();
             Button button = (Button)sender;
             string filePath = button.Name;
-            
+
+            button.TabStop = false;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.FlatAppearance.BorderColor = Color.FromArgb(0, 255, 255, 255); //transparent
+
             // Displays the MessageBox
             string value = "";
             if (InputBox("New Tag", "New Tag name:", ref value) == DialogResult.OK)
             {
+                if (value.Equals(""))
+                {
+                    return;
+                }
                 // Add tags to dictionaries
                 if (!filesDictionary.ContainsKey(filePath)) {
                     filesDictionary.Add(filePath, new List<string>() { value });
@@ -289,6 +299,8 @@ namespace FileManager
 
         private void button_searchTags_Click(object sender, EventArgs e)
         {
+            resetPlaceholders();
+
             Button button = (Button)sender;
             isSearching = true;
             string searchString = button.Text;
@@ -299,7 +311,7 @@ namespace FileManager
             if (tagsDictionary.ContainsKey(searchString))
             {
                 panel_filesList.Controls.Clear();
-                displayFilesList(tagsDictionary[searchString]);
+                displayFilesList(tagsDictionary[searchString], "");
             }
             else
             {
@@ -428,6 +440,77 @@ namespace FileManager
             return dialogResult;
         }
 
-       
+        private void searchTags_clicked(object sender, MouseEventArgs e)
+        {
+            resetPlaceholders();
+
+            TextBox textbox = (TextBox)sender;
+            if (textbox.Text.Equals("Search tags..."))
+                textbox.Text = "";
+        }
+
+        private void searchFolder_clicked(object sender, MouseEventArgs e)
+        {
+            resetPlaceholders();
+
+            TextBox textbox = (TextBox)sender;
+            if (textbox.Text.Equals("Search folder..."))
+                textbox.Text = "";
+        }
+
+        private void button_searchFolders(object sender, KeyEventArgs e)
+        {
+            TextBox textbox = (TextBox)sender;
+            string searchString = textbox.Text;
+
+            currentDirectories = Directory.GetDirectories(this.currentLocation);
+            currentFiles = Directory.GetFiles(this.currentLocation);
+
+            panel_filesList.Controls.Clear();
+            label_currentLocation.Text = currentLocation;
+
+            displayFilesList(new List<string>(currentDirectories), searchString);
+            displayFilesList(new List<string>(currentFiles), searchString);
+        }
+
+        private void resetPlaceholders(object sender, MouseEventArgs e)
+        {
+            this.ActiveControl = null;
+            resetPlaceholders();
+        }
+
+        private void resetPlaceholders()
+        {
+            if (textbox_search.Text.Equals(""))
+                textbox_search.Text = "Search tags...";
+
+            if (text_searchAll.Text.Equals(""))
+                text_searchAll.Text = "Search folder...";
+            
+        }
+
+        private void search_currentLocation(object sender, KeyEventArgs e)
+        {
+            if(e.KeyData == Keys.Enter)
+            {
+                TextBox textbox = (TextBox)sender;
+                string searchString = textbox.Text;
+
+                try
+                {
+                    currentLocation = searchString;
+                    currentDirectories = Directory.GetDirectories(searchString);
+                    currentFiles = Directory.GetFiles(searchString);
+                    label_currentLocation.Text = currentLocation;
+                }
+                catch
+                {
+                    return;
+                }
+
+                Console.WriteLine("It goes through");
+                openDirectory(currentLocation);
+            }
+        }
     }
 }

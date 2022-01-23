@@ -70,6 +70,7 @@
             this.panel_filesList.Name = "panel_filesList";
             this.panel_filesList.Size = new System.Drawing.Size(1963, 881);
             this.panel_filesList.TabIndex = 0;
+            this.panel_filesList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // backButton
             // 
@@ -177,6 +178,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(2529, 233);
             this.panel2.TabIndex = 11;
+            this.panel2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // panel9
             // 
@@ -187,6 +189,7 @@
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(65, 62);
             this.panel9.TabIndex = 5;
+            this.panel9.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // panel8
             // 
@@ -196,6 +199,7 @@
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(65, 62);
             this.panel8.TabIndex = 4;
+            this.panel8.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // panel7
             // 
@@ -206,6 +210,7 @@
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(62, 62);
             this.panel7.TabIndex = 3;
+            this.panel7.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // panel6
             // 
@@ -215,6 +220,7 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(65, 62);
             this.panel6.TabIndex = 2;
+            this.panel6.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // panel5
             // 
@@ -224,6 +230,7 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(64, 62);
             this.panel5.TabIndex = 1;
+            this.panel5.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // label4
             // 
@@ -234,6 +241,7 @@
             this.label4.Size = new System.Drawing.Size(162, 32);
             this.label4.TabIndex = 25;
             this.label4.Text = "Quick Links";
+            this.label4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // panel_tagsList
             // 
@@ -244,6 +252,7 @@
             this.panel_tagsList.Name = "panel_tagsList";
             this.panel_tagsList.Size = new System.Drawing.Size(500, 1013);
             this.panel_tagsList.TabIndex = 1;
+            this.panel_tagsList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             // 
             // current_location_container
             // 
@@ -285,8 +294,9 @@
             this.label_currentLocation.ForeColor = System.Drawing.Color.White;
             this.label_currentLocation.Location = new System.Drawing.Point(611, 271);
             this.label_currentLocation.Name = "label_currentLocation";
-            this.label_currentLocation.Size = new System.Drawing.Size(594, 31);
+            this.label_currentLocation.Size = new System.Drawing.Size(1250, 31);
             this.label_currentLocation.TabIndex = 0;
+            this.label_currentLocation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.search_currentLocation);
             // 
             // button1
             // 
@@ -320,6 +330,8 @@
             this.text_searchAll.Size = new System.Drawing.Size(456, 31);
             this.text_searchAll.TabIndex = 19;
             this.text_searchAll.Text = "Search folder...";
+            this.text_searchAll.MouseClick += new System.Windows.Forms.MouseEventHandler(this.searchFolder_clicked);
+            this.text_searchAll.KeyUp += new System.Windows.Forms.KeyEventHandler(this.button_searchFolders);
             // 
             // button2
             // 
@@ -344,6 +356,7 @@
             this.textbox_search.Size = new System.Drawing.Size(327, 31);
             this.textbox_search.TabIndex = 20;
             this.textbox_search.Text = "Search tags...";
+            this.textbox_search.MouseClick += new System.Windows.Forms.MouseEventHandler(this.searchTags_clicked);
             this.textbox_search.KeyUp += new System.Windows.Forms.KeyEventHandler(this.button_filterTagsSidebar_Search);
             // 
             // panel4
@@ -422,6 +435,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FileManager";
             this.Text = "File Manager";
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resetPlaceholders);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
