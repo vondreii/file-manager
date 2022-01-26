@@ -141,9 +141,41 @@ namespace FileManager
                         Button newBtn = createButton(text: "", width: 100, name: filesDirectoriesList[i]);
                         FileAttributes attr = File.GetAttributes(filesDirectoriesList[i]);
                         if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                        {
                             newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\folder-icon.png");
+                        }
                         else
-                            newBtn.Image = System.Drawing.Image.FromFile(Environment.CurrentDirectory + "\\icons\\pdf-icon.png"); //ToDo different extensions
+                        {
+                            string fileExt = Path.GetExtension(filesDirectoriesList[i]);
+                            switch(fileExt)
+                            {
+                                case ".PNG":
+                                case ".png":
+                                case ".JPG":
+                                case ".jpg":
+                                case ".JPEG":
+                                case ".jpeg":
+                                    newBtn.Image = Image.FromFile(Environment.CurrentDirectory + "\\icons\\image-icon2.png"); 
+                                    break;
+                                case ".PDF":
+                                case ".pdf":
+                                    newBtn.Image = Image.FromFile(Environment.CurrentDirectory + "\\icons\\pdf-icon2.png");
+                                    break;
+                                case ".doc":
+                                case ".DOC":
+                                case ".docx":
+                                case ".DOCX":
+                                    newBtn.Image = Image.FromFile(Environment.CurrentDirectory + "\\icons\\word-icon.png");
+                                    break;
+                                case ".TXT":
+                                case ".txt":
+                                    newBtn.Image = Image.FromFile(Environment.CurrentDirectory + "\\icons\\text-icon.png");
+                                    break;
+                                default:
+                                    newBtn.Image = Image.FromFile(Environment.CurrentDirectory + "\\icons\\pdf-icon2.png");
+                                    break;
+                            }
+                        }
 
                         panel_filesList.Controls.Add(newBtn);
 
