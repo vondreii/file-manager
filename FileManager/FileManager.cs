@@ -64,18 +64,17 @@ namespace FileManager
             button2.BackColor = secondary;
             backButton.BackColor = primary;
             backButton.ForeColor = text;
-            button_desktop.BackColor = primary;
+            button_desktop.BackColor = secondary;
             button_desktop.ForeColor = text;
-            button_music.BackColor = primary;
+            button_music.BackColor = secondary;
             button_music.ForeColor = text;
-            button_videos.BackColor = primary;
+            button_videos.BackColor = secondary;
             button_videos.ForeColor = text;
-            button_myDocuments.BackColor = primary;
+            button_myDocuments.BackColor = secondary;
             button_myDocuments.ForeColor = text;
-            button_pictures.BackColor = primary;
+            button_pictures.BackColor = secondary;
             button_pictures.ForeColor = text;
-            current_location_container.BackColor = secondary;
-            panel2.BackColor = primary;
+            panel2.BackColor = secondary;
 
             // Load the files in the default directory on the screen
             if (!isLoaded)
@@ -112,10 +111,14 @@ namespace FileManager
             currentLocation = filePath;
             currentDirectories = Directory.GetDirectories(filePath);
             currentFiles = Directory.GetFiles(filePath);
-
-            panel_filesList.Controls.Clear();
-            label_currentLocation.Text = currentLocation;
             
+            // Gets what should be written at the top filepath
+            string currentDir = Path.GetFileName(currentLocation);
+            label_currentLocation.Text = currentLocation.Remove(currentLocation.IndexOf(currentDir)-1);
+            currentDir_heading.Text = "\\"+currentDir;
+            
+            panel_filesList.Controls.Clear();
+
             displayFilesList(new List<string>(currentDirectories), "");
             displayFilesList(new List<string>(currentFiles), "");
         }
@@ -543,6 +546,35 @@ namespace FileManager
                 Console.WriteLine("It goes through");
                 openDirectory(currentLocation);
             }
+        }
+
+        private void currentPath_textchanged(object sender, EventArgs e)
+        {
+            // ToDo: Fix 
+            TextBox textbox = (TextBox)sender as TextBox;
+
+            // Find the name of the parent folder
+            string currentDir = Path.GetFileName(currentLocation);
+            string parentFolderPath = currentLocation.Remove(currentLocation.IndexOf(currentDir) - 1);
+            string parent = Path.GetFileName(parentFolderPath);
+
+            //if (textbox.Text.Equals(""))
+            //{
+            //    currentDir_heading.Text = "\\" + parent;
+            //    label_currentLocation.Text = parentFolderPath.Remove(parentFolderPath.IndexOf(parent) - 1);
+            //    currentLocation = parentFolderPath;
+            //    openDirectory(currentLocation);
+            //}
+            //else if((textbox.Text.LastIndexOf("\\") == textbox.Text.Length-1) && textbox.Text.LastIndexOf("\\") != 0)
+            //{
+            //    currentDir_heading.Text = "\\";
+            //    label_currentLocation.Text = currentLocation; 
+            //}
+            //else if((textbox.Text.LastIndexOf("/") == textbox.Text.Length - 1) && textbox.Text.LastIndexOf("/") != 0)
+            //{
+            //    currentDir_heading.Text = "\\";
+            //    label_currentLocation.Text = currentLocation;
+            //}
         }
     }
 }
