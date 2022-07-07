@@ -11,10 +11,10 @@ C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\FileMana
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\bin\Debug\FileManager.exe.config
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\bin\Debug\FileManager.exe
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\bin\Debug\FileManager.pdb
-C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.csprojAssemblyReference.cache
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.FileManager.resources
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.Properties.Resources.resources
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.csproj.GenerateResource.cache
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.csproj.CoreCompileInputs.cache
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.exe
 C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.pdb
+C:\Users\Sharl\Desktop\All Files\Side Projects\file-manager\FileManager\obj\Debug\FileManager.csproj.AssemblyReference.cache
